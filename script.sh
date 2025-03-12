@@ -9,6 +9,8 @@ manifest_branch="fifteen" # The branch
 device_codename="phoenix"  # Example: miatoll, phoenix, surya
 lunch_prefix="aosp"        # Example: aosp, lineage
 device_soc="sm6150"        # Example: sm6150
+build_dir="tmp/src/android" # Where the source is cloned and the path should start from the root dir
+mka_clean="1" # Clean build or not 
 
 # Define build command
 build_code="mka bacon -j$(nproc)"
@@ -112,6 +114,10 @@ done
 # Any extra stuff
 rm -rf hardware/xiaomi/megvii
 
+# Make Sure it's on the right Directory
+cd /
+cd "${build_dir}"
+
 # ======= EXPORT ENVIRONMENT VARIABLES =======
 echo "======= Exporting Environment Variables ======"
 export BUILD_USERNAME=tillua467
@@ -126,29 +132,42 @@ echo "====== Starting Envsetup ======="
 source build/envsetup.sh || { echo "Envsetup failed"; exit 1; }
 echo "====== Envsetup Done ======="
 
-# ======= SELECT BUILD TARGET =======
-LUNCH_OPTIONS=(
-    "lunch ${lunch_prefix}_${device_codename}-ap4a-userdebug"
-    "lunch ${lunch_prefix}_${device_codename}-ap3a-userdebug"
-    "lunch ${lunch_prefix}_${device_codename}-ap2a-userdebug"
-    "lunch ${lunch_prefix}_${device_codename}-userdebug"
-)
-
-success=false
-for CMD in "${LUNCH_OPTIONS[@]}"; do
-    echo "Trying: $CMD"
-    if eval "$CMD"; then
-        success=true
-        break
-    fi
-done
-
-# If all lunch commands fail, try breakfast
-if [ "$success" = false ]; then
-    echo "All lunch commands failed, trying: breakfast ${lunch_prefix}_${device_codename}-userdebug"
-    breakfast ${lunch_prefix}_${device_codename}-userdebug || { echo "Breakfast failed. Exiting."; exit 1; }
-    success=true
+if [[ "$mka_clean" == "1" || "$mka_clean" == "true" || "$mka_clean" == "yes" || "$mka_clean" == "y" ]]; then
+    mka clean
 fi
+
+if [[ "$build_code" == "brunch"* ]]; then
+    echo "Detected brunch as the build command, skipping lunch..."
+else
+    LUNCH_OPTIONS=(
+        "lunch ${lunch_prefix}_${device_codename}-ap4a-userdebug"
+        "lunch ${lunch_prefix}_${device_codename}-ap3a-userdebug"
+        "lunch ${lunch_prefix}_${device_codename}-ap2a-userdebug"
+        "lunch ${lunch_prefix}_${device_codename}-userdebug"
+    )
+
+    success=false
+    for CMD in "${LUNCH_OPTIONS[@]}"; do
+        echo "Trying: $CMD"
+        if eval "$CMD"; then
+            success=true
+            break
+        fi
+    done
+
+    # If all lunch commands fail, try breakfast
+    if [ "$success" = false ]; then
+        echo "All lunch commands failed, trying: breakfast ${lunch_prefix}_${device_codename}-userdebug"
+        breakfast ${lunch_prefix}_${device_codename}-userdebug || { echo "Breakfast failed. Exiting."; exit 1; }
+        success=true
+    fi
+
+    if [ "$success" = false ]; then
+        echo "All attempts to select a build target failed, exiting."
+        exit 1
+    fi
+fi
+
 
 # ======= BUILD THE ROM =======
 if [ "$success" = true ]; then
