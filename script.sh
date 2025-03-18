@@ -1,7 +1,7 @@
 #!/bin/bash
-set -euo pipefail
 
-# crave run --no-patch -- "curl https://raw.githubusercontent.com/tillua467/Android-Scripts/refs/heads/main/script.sh | bash"
+BUILD_DIR="tmp/src/android" # Where the source is cloned and the path should start from the root dir
+set -euo pipefail
 
 # ======= USER CONFIGURATION =======
 manifest_url="https://github.com/LineageOS/android.git" # The rom you wanna build
@@ -9,7 +9,6 @@ manifest_branch="lineage-22.1" # The branch
 device_codename="phoenix"  # Example: miatoll, phoenix, surya
 lunch_prefix="lineage"        # Example: aosp, lineage
 device_soc="sm6150"        # Example: sm6150
-build_dir="tmp/src/android" # Where the source is cloned and the path should start from the root dir
 mka_clean="1" # Clean build or not 
 variant="userdebug" # user/userdebug/eng
 
