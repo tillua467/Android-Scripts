@@ -1,6 +1,5 @@
 #!/bin/bash
 
-BUILD_DIR="tmp/src/android" # Where the source is cloned and the path should start from the root dir
 set -euo pipefail
 
 # ======= USER CONFIGURATION =======
@@ -133,20 +132,23 @@ done
 
 /opt/crave/resync.sh # sync the trees
 
-# Check if BUILD_DIR is set
-if [[ -z "$BUILD_DIR" ]]; then
-    echo "BUILD_DIR is not set. Exiting..."
+# Get the directory where the script is located
+script_dir=$(dirname "$0")
+
+# Search for envsetup.sh from the script's location
+envsetup_path=$(find "$script_dir" -type f -name "envsetup.sh" | grep "/build/envsetup.sh$" | head -n 1)
+
+if [ -z "$envsetup_path" ]; then
+    echo "envsetup.sh not found in the expected locations. Exiting."
     exit 1
 fi
 
-# Check if the script is in the right directory
-if [[ "$(pwd)" != "$BUILD_DIR" ]]; then
-    echo "Not in the build directory. Moving to $BUILD_DIR..."
-    cd / || { echo "Failed to change to root directory"; exit 1; }
-    cd "$BUILD_DIR" || { echo "Failed to enter build directory: $BUILD_DIR"; exit 1; }
-else
-    echo "Already in the build directory: $BUILD_DIR"
-fi
+echo "Found envsetup.sh at: $envsetup_path"
+
+# Move to the directory where envsetup.sh is located (this should be inside 'build/')
+cd "$(dirname "$envsetup_path")/.."
+
+echo "Now in the root directory of the build environment."
 
 # ======= EXPORT ENVIRONMENT VARIABLES =======
 echo "======= Exporting Environment Variables ======"
@@ -161,6 +163,41 @@ echo "======= Export Done ======"
 echo "====== Starting Envsetup ======="
 source build/envsetup.sh || { echo "Envsetup failed"; exit 1; }
 echo "====== Envsetup Done ======="
+#!/bin/bash
+
+# Get the directory where the script is located
+script_dir=$(dirname "$0")
+
+# Search for envsetup.sh from the script's location
+envsetup_path=$(find "$script_dir" -type f -name "envsetup.sh" | grep "/build/envsetup.sh$" | head -n 1)
+
+if [ -z "$envsetup_path" ]; then
+    echo "envsetup.sh not found in the expected locations. Exiting."
+    exit 1
+fi
+
+echo "Found envsetup.sh at: $envsetup_path"
+
+# Move to the directory where envsetup.sh is located (this should be inside 'build/')
+cd "$(dirname "$envsetup_path")/.."
+
+echo "Now in the root directory of the build environment."
+
+# ======= EXPORT ENVIRONMENT VARIABLES =======
+echo "======= Exporting Environment Variables ======"
+export BUILD_USERNAME=tillua467
+export BUILD_HOSTNAME=crave
+export TARGET_DISABLE_EPPE=true
+export TZ=Asia/Dhaka
+export ALLOW_MISSING_DEPENDENCIES=true
+echo "======= Export Done ======"
+
+# ======= BUILD ENVIRONMENT =======
+echo "====== Starting Envsetup ======="
+source build/envsetup.sh || { echo "Envsetup failed"; exit 1; }
+echo "====== Envsetup Done ======="
+
+
 # Clean build if the user set it
 if [[ "$mka_clean" == "1" || "$mka_clean" == "true" || "$mka_clean" == "yes" || "$mka_clean" == "y" ]]; then
     mka clean
