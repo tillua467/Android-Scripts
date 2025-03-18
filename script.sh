@@ -16,6 +16,8 @@ variant="userdebug" # user/userdebug/eng
 # Define build command
 build_code="brunch"
 
+CURRENT_DIR=$(pwd)
+
 # ======= USER-DEFINED DIRECTORY STRUCTURE =======
 DT_DIR="device/xiaomi/${device_codename}" 
 CDT_DIR="device/xiaomi/${device_soc}-common"
@@ -132,9 +134,20 @@ done
 
 /opt/crave/resync.sh # sync the trees
 
-# Make Sure it's on the right Directory
-cd /
-cd "${build_dir}" || { echo "Failed to change to build directory: ${build_dir}"; exit 1; }
+# Check if BUILD_DIR is set
+if [[ -z "$BUILD_DIR" ]]; then
+    echo "BUILD_DIR is not set. Exiting..."
+    exit 1
+fi
+
+# Check if the script is in the right directory
+if [[ "$(pwd)" != "$BUILD_DIR" ]]; then
+    echo "Not in the build directory. Moving to $BUILD_DIR..."
+    cd / || { echo "Failed to change to root directory"; exit 1; }
+    cd "$BUILD_DIR" || { echo "Failed to enter build directory: $BUILD_DIR"; exit 1; }
+else
+    echo "Already in the build directory: $BUILD_DIR"
+fi
 
 # ======= EXPORT ENVIRONMENT VARIABLES =======
 echo "======= Exporting Environment Variables ======"
@@ -147,10 +160,8 @@ echo "======= Export Done ======"
 
 # ======= BUILD ENVIRONMENT =======
 echo "====== Starting Envsetup ======="
-cd "${build_dir}" || { echo "Failed to change to build directory: ${build_dir}"; exit 1; } # Ensure we're inside the source tree
 source build/envsetup.sh || { echo "Envsetup failed"; exit 1; }
 echo "====== Envsetup Done ======="
-
 # Clean build if the user set it
 if [[ "$mka_clean" == "1" || "$mka_clean" == "true" || "$mka_clean" == "yes" || "$mka_clean" == "y" ]]; then
     mka clean
