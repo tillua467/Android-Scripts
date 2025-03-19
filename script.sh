@@ -3,8 +3,8 @@
 set -euo pipefail
 
 # ======= USER CONFIGURATION =======
-manifest_url="https://github.com/LineageOS/android.git" # The rom you wanna build
-manifest_branch="lineage-22.1" # The branch
+manifest_url="https://github.com/AxionAOSP/android.git" # The rom you wanna build
+manifest_branch="lineage-22.2" # The branch
 device_codename="phoenix"  # Example: miatoll, phoenix, surya
 lunch_prefix="lineage"        # Example: aosp, lineage
 device_soc="sm6150"        # Example: sm6150
