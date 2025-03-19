@@ -130,40 +130,7 @@ for entry in "${repos[@]}"; do
     clone_repo_with_retry "$repo_path" "$repo_url" "$repo_branch"
 done
 
-/opt/crave/resync.sh # sync the trees
-
-# Get the directory where the script is located
-script_dir=$(dirname "$0")
-
-# Search for envsetup.sh from the script's location
-envsetup_path=$(find "$script_dir" -type f -name "envsetup.sh" | grep "/build/envsetup.sh$" | head -n 1)
-
-if [ -z "$envsetup_path" ]; then
-    echo "envsetup.sh not found in the expected locations. Exiting."
-    exit 1
-fi
-
-echo "Found envsetup.sh at: $envsetup_path"
-
-# Move to the directory where envsetup.sh is located (this should be inside 'build/')
-cd "$(dirname "$envsetup_path")/.."
-
-echo "Now in the root directory of the build environment."
-
-# ======= EXPORT ENVIRONMENT VARIABLES =======
-echo "======= Exporting Environment Variables ======"
-export BUILD_USERNAME=tillua467
-export BUILD_HOSTNAME=crave
-export TARGET_DISABLE_EPPE=true
-export TZ=Asia/Dhaka
-export ALLOW_MISSING_DEPENDENCIES=true
-echo "======= Export Done ======"
-
-# ======= BUILD ENVIRONMENT =======
-echo "====== Starting Envsetup ======="
-source build/envsetup.sh || { echo "Envsetup failed"; exit 1; }
-echo "====== Envsetup Done ======="
-#!/bin/bash
+/opt/crave/resync.sh
 
 # Get the directory where the script is located
 script_dir=$(dirname "$0")
