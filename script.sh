@@ -32,7 +32,7 @@ repos=(
     "$KERNEL_DIR https://github.com/Rom-Build-sys/android_kernel_xiaomi_sm6150 lineage-22.1"
     "$VENDOR_DIR https://github.com/tillua467/proprietary_vendor_xiaomi_phoenix lineage-22.1"
     "$COMMON_VENDOR_DIR https://github.com/aosp-phoenix/proprietary_vendor_xiaomi_sm6150-common lineage-22.1"
-    "$HARDWARE_XIAOMI_DIR https://github.com/tillua467/android_hardware_xiaomi lineage-22.1"
+    "$HARDWARE_XIAOMI_DIR https://github.com/tillua467/android_hardware_xiaomi los-22.1"
     "$MIUICAMERA_DIR https://gitlab.com/Shripal17/vendor_xiaomi_miuicamera fifteen-leica"
 )
 
@@ -132,24 +132,6 @@ done
 
 /opt/crave/resync.sh
 
-# Get the directory where the script is located
-script_dir=$(dirname "$0")
-
-# Search for envsetup.sh from the script's location
-envsetup_path=$(find "$script_dir" -type f -name "envsetup.sh" | grep "/build/envsetup.sh$" | head -n 1)
-
-if [ -z "$envsetup_path" ]; then
-    echo "envsetup.sh not found in the expected locations. Exiting."
-    exit 1
-fi
-
-echo "Found envsetup.sh at: $envsetup_path"
-
-# Move to the directory where envsetup.sh is located (this should be inside 'build/')
-cd "$(dirname "$envsetup_path")/.."
-
-echo "Now in the root directory of the build environment."
-
 # ======= EXPORT ENVIRONMENT VARIABLES =======
 echo "======= Exporting Environment Variables ======"
 export BUILD_USERNAME=tillua467
@@ -158,6 +140,26 @@ export TARGET_DISABLE_EPPE=true
 export TZ=Asia/Dhaka
 export ALLOW_MISSING_DEPENDENCIES=true
 echo "======= Export Done ======"
+
+# Check if build/envsetup.sh exists
+if [ -f "build/envsetup.sh" ]; then
+    echo "Found build/envsetup.sh in the current directory."
+else
+    # Get the directory where the script is located
+    script_dir=$(dirname "$0")
+    # Search for envsetup.sh from the script's location
+    envsetup_path=$(find "$script_dir" -type f -name "envsetup.sh" | grep "/build/envsetup.sh$" | head -n 1)
+
+    if [ -z "$envsetup_path" ]; then
+        echo "envsetup.sh not found in the expected locations. Exiting."
+        exit 1
+    fi
+    echo "Found envsetup.sh at: $envsetup_path"
+    # Move to the directory where envsetup.sh is located (this should be inside 'build/')
+    cd "$(dirname "$envsetup_path")/.."
+fi
+
+echo "Now in the root directory of the build environment."
 
 # ======= BUILD ENVIRONMENT =======
 echo "====== Starting Envsetup ======="
