@@ -29,7 +29,7 @@ MIUICAMERA_DIR="vendor/xiaomi/miuicamera"
 repos=(
     "$DT_DIR https://github.com/tillua467/phoenix-dt los-22.1"
     "$CDT_DIR https://github.com/tillua467/sm6150-common los-22.1"
-    "$KERNEL_DIR https://github.com/Rom-Build-sys/android_kernel_xiaomi_sm6150 lineage-22.1"
+    "$KERNEL_DIR https://github.com/Lafactorial/kernel_xiaomi_sm6150 lineage-22.1"
     "$VENDOR_DIR https://github.com/tillua467/proprietary_vendor_xiaomi_phoenix lineage-22.1"
     "$COMMON_VENDOR_DIR https://github.com/aosp-phoenix/proprietary_vendor_xiaomi_sm6150-common lineage-22.1"
     "$HARDWARE_XIAOMI_DIR https://github.com/tillua467/android_hardware_xiaomi los-22.2"
