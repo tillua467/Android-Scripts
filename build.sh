@@ -61,7 +61,7 @@ echo "Initializing repo..."
 repo init -u https://github.com/AxionAOSP/android.git -b lineage-22.2 --git-lfs || { echo "Repo init failed!"; exit 1; }
 
 echo "Syncing repo..."
-repo sync || { echo "Repo sync failed!"; exit 1; }
+repo sync --force-sync  || { echo "Repo sync failed!"; exit 1; }
 
 # Clone repositories
 echo "Cloning trees..."
