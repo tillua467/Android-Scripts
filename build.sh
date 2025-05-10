@@ -58,10 +58,10 @@ echo "Cleaning done"
 
 # Init and sync repo
 echo "Initializing repo..."
-repo init -u https://github.com/AxionAOSP/android.git -b lineage-22.2 --git-lfs || { echo "Repo init failed!"; exit 1; }
+repo init -u https://github.com/ProjectMatrixx/android.git -b 15.0 --git-lfs || { echo "Repo init failed!"; exit 1; }
 
 echo "Syncing repo..."
-repo sync --force-sync  || { echo "Repo sync failed!"; exit 1; }
+repo sync -c --no-clone-bundle --optimized-fetch --prune --force-sync -j$(nproc --all)  || { echo "Repo sync failed!"; exit 1; }
 
 # Clone repositories
 echo "Cloning trees..."
