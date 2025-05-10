@@ -3,8 +3,8 @@
 set -euo pipefail
 
 # ======= USER CONFIGURATION =======
-manifest_url="https://github.com/AxionAOSP/android.git" # The rom you wanna build
-manifest_branch="lineage-22.2" # The branch
+manifest_url="https://github.com/ProjectMatrixx/android.git" # The rom you wanna build
+manifest_branch="15.0" # The branch
 device_codename="phoenix"  # Example: miatoll, phoenix, surya
 lunch_prefix="lineage"        # Example: aosp, lineage
 device_soc="sm6150"        # Example: sm6150
@@ -27,11 +27,11 @@ MIUICAMERA_DIR="vendor/xiaomi/miuicamera"
 
 # ======= Define Trees and Branches Here =======
 repos=(
-    "$DT_DIR https://github.com/tillua467/phoenix-dt los-22.1"
-    "$CDT_DIR https://github.com/tillua467/sm6150-common los-22.1"
-    "$KERNEL_DIR https://github.com/Lafactorial/kernel_xiaomi_sm6150 lineage-22.1"
-    "$VENDOR_DIR https://github.com/tillua467/proprietary_vendor_xiaomi_phoenix lineage-22.1"
-    "$COMMON_VENDOR_DIR https://github.com/aosp-phoenix/proprietary_vendor_xiaomi_sm6150-common lineage-22.1"
+    "$DT_DIR https://github.com/tillua467/phoenix-dt los-22.2"
+    "$CDT_DIR https://github.com/tillua467/sm6150-common los-22.2"
+    "$KERNEL_DIR https://github.com/tillua467/android_kernel_xiaomi_phoenix los-22.2"
+    "$VENDOR_DIR https://github.com/tillua467/proprietary_vendor_xiaomi_phoenix lineage-22.2"
+    "$COMMON_VENDOR_DIR https://github.com/tillua467/proprietary_vendor_xiaomi_sm6150-common lineage-22.2"
     "$HARDWARE_XIAOMI_DIR https://github.com/tillua467/android_hardware_xiaomi los-22.2"
     "$MIUICAMERA_DIR https://gitlab.com/Shripal17/vendor_xiaomi_miuicamera fifteen-leica"
 )
