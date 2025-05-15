@@ -32,7 +32,7 @@ echo "===================================="
 echo "=============================================="
 echo "         Cloning Manifest..........."
 echo "=============================================="
-if ! repo init --no-repo-verify --git-lfs -u https://github.com/ProjectInfinity-X/manifest -b 15 -g default,-mips,-darwin,-notdefault; then
+if ! repo init -u https://github.com/Evolution-X/manifest -b vic --git-lfs; then
   echo "Repo initialization failed. Exiting."
   exit 1
 fi
@@ -40,37 +40,34 @@ echo "=============================================="
 echo "       Manifest Cloned successfully"
 echo "=============================================="
 # Sync
-if ! /opt/crave/resync.sh || ! repo sync -c --no-clone-bundle --no-tags --optimized-fetch --prune --force-sync -j$(nproc --all); then
+if ! /opt/crave/resync.sh || ! repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags; then
   echo "Repo sync failed. Exiting."
   exit 1
 fi
-echo "============="
+echo "==============="
 echo " Sync success"
-echo "============="
+echo "==============="
 
 # Clone device trees and other dependencies
 echo "=============================================="
 echo "       Cloning Trees..........."
 echo "=============================================="
-git clone https://github.com/tillua467/phoenix-dt -b los-22.1 device/xiaomi/phoenix || { echo "Failed to clone device tree"; exit 1; }
+git clone https://github.com/tillua467/phoenix-dt -b los-22.2 device/xiaomi/phoenix || { echo "Failed to clone device tree"; exit 1; }
 
-git clone https://github.com/tillua467/sm6150-common -b los-22.1 device/xiaomi/sm6150-common || { echo "Failed to clone common device tree"; exit 1; }
+git clone https://github.com/tillua467/sm6150-common -b los-22.2 device/xiaomi/sm6150-common || { echo "Failed to clone common device tree"; exit 1; }
 
-git clone https://github.com/tillua467/android_kernel_xiaomi_sm6150 kernel/xiaomi/sm6150 || { echo "Failed to clone kernel"; exit 1; }
+git clone https://github.com/tillua467/android_kernel_xiaomi_phoenix -b los-22.2 kernel/xiaomi/sm6150 || { echo "Failed to clone kernel"; exit 1; }
 
-git clone https://github.com/aosp-phoenix/proprietary_vendor_xiaomi_phoenix vendor/xiaomi/phoenix || { echo "Failed to clone vendor phoenix"; exit 1; }
+git clone https://github.com/tillua467/proprietary_vendor_xiaomi_phoenix -b lineage-22.2 vendor/xiaomi/phoenix || { echo "Failed to clone vendor phoenix"; exit 1; }
 
-git clone https://github.com/aosp-phoenix/proprietary_vendor_xiaomi_sm6150-common vendor/xiaomi/sm6150-common || { echo "Failed to clone common vendor phoenix"; exit 1; }
+git clone https://github.com/tillua467/proprietary_vendor_xiaomi_sm6150-common -b lineage-22.2  vendor/xiaomi/sm6150-common || { echo "Failed to clone common vendor phoenix"; exit 1; }
 
-git clone https://github.com/LineageOS/android_hardware_xiaomi hardware/xiaomi || { echo "Failed to clone hardware"; exit 1; }
+git clone https://github.com/tillua467/android_hardware_xiaomi -b los-22.2 hardware/xiaomi || { echo "Failed to clone hardware"; exit 1; }
 
 git clone https://gitlab.com/Shripal17/vendor_xiaomi_miuicamera vendor/xiaomi/miuicamera || { echo "Failed to clone MIUI Camera"; exit 1; }
 
 /opt/crave/resync.sh
 
- # clone
-rm -rf vendor/infinity
-git clone https://github.com/Gtajisan/vendor_infinity -b 15 vendor/infinity
 
 # Export Environment Variables
 echo "======= Exporting........ ======"
@@ -89,6 +86,6 @@ echo "====== Envsetup Done ======="
 
 # Build ROM
 echo "===================================="
-echo "        Build Infinity.."
+echo "        Build Evo.."
 echo "===================================="
 brunch phoenix || { echo "Build failed"; exit 1; }
