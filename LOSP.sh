@@ -32,7 +32,7 @@ echo "===================================="
 echo "=============================================="
 echo "         Cloning Manifest..........."
 echo "=============================================="
-if ! repo init -u https://github.com/Evolution-X/manifest -b vic --git-lfs; then
+if ! repo init -u https://github.com/Evolution-X/manifest -b vic --depth=1 --git-lfs; then
   echo "Repo initialization failed. Exiting."
   exit 1
 fi
@@ -67,6 +67,12 @@ git clone https://github.com/tillua467/android_hardware_xiaomi -b los-22.2 hardw
 git clone https://gitlab.com/Shripal17/vendor_xiaomi_miuicamera vendor/xiaomi/miuicamera || { echo "Failed to clone MIUI Camera"; exit 1; }
 
 /opt/crave/resync.sh
+
+# Keys
+git clone https://github.com/Evolution-X/vendor_evolution-priv_keys-template vendor/evolution-priv/keys
+cd vendor/evolution-priv/keys
+./keys.sh
+cd ../../..
 
 
 # Export Environment Variables
